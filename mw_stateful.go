@@ -10,13 +10,16 @@ import (
 )
 
 //
-func require() func(func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+type Middleware func(http.HandlerFunc) http.HandlerFunc
+
+//
+func require() Middleware {
 	//
 	var services = &servicer{mu: sync.RWMutex{}}
 
 	mw_tester(services)
 
-	return func(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(f http.HandlerFunc) http.HandlerFunc {
 
 		return func(w http.ResponseWriter, r *http.Request) {
 			path := r.URL.Path

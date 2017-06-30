@@ -7,7 +7,7 @@ import (
 )
 
 //
-func trapper(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+func trapper(f http.HandlerFunc) http.HandlerFunc {
 	//
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
