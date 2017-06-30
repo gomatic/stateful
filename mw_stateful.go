@@ -10,17 +10,11 @@ import (
 )
 
 //
-type Middleware func(http.HandlerFunc) http.HandlerFunc
-
-//
 func require() Middleware {
 	//
 	var services = &servicer{mu: sync.RWMutex{}}
 
-	mw_tester(services)
-
-	return func(f http.HandlerFunc) http.HandlerFunc {
-
+	return Middleware(func(f http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			path := r.URL.Path
 
@@ -74,5 +68,5 @@ func require() Middleware {
 				return
 			}
 		}
-	}
+	})
 }

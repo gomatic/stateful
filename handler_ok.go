@@ -16,9 +16,12 @@ func ok(w http.ResponseWriter, r *http.Request) {
 			ctx.initializeFailure(fmt.Errorf("failed"))
 		}
 	default:
-		ctx := r.Context()
-		db := ctx.Value("db")
-		acc := ctx.Value("acc")
-		fmt.Fprintf(w, "handling %s db:%+v acc:%+v\n", path, db, acc)
+		ctx, ok := r.Context().(*svctx)
+		if !ok {
+			log.Printf("Unexpected context type: %T", r.Context())
+			return
+		}
+		db, acc := ctx.db, ctx.acc
+		fmt.Fprintf(w, "handling %s db:%+v acc:%+v\n", path, *db, *acc)
 	}
 }
